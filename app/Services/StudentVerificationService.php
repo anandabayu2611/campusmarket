@@ -25,6 +25,14 @@ class StudentVerificationService
     /** Dipanggil setelah kode email benar. Mengembalikan: verified | pending | rejected */
     public function evaluate(array $user): string
     {
+        // Mode development: langsung verified tanpa cek student_records / Admin Universitas.
+        if (config('app.auto_verify_students')) {
+            $status = 'verified';
+            $this->apply($user, $status, 'Diverifikasi otomatis (mode development).');
+
+            return $status;
+        }
+
         $status = 'pending';
         $note   = 'Menunggu konfirmasi Admin Universitas.';
 

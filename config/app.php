@@ -123,4 +123,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Auto Verify Students (development)
+    |--------------------------------------------------------------------------
+    |
+    | Kalau true, akun baru langsung berstatus terverifikasi tanpa menunggu
+    | pemeriksaan Admin Universitas. Set false di production.
+    |
+    */
+
+    'auto_verify_students' => env('AUTO_VERIFY_STUDENTS', false),
+
 ];

@@ -28,7 +28,7 @@ return [
     */
     'student_verification' => [
         'auto_approve_on_record_match' => true,
-        'allow_login_while_pending'    => false,
+        'allow_login_while_pending'    => true,
     ],
 
     'roles' => ['student', 'admin', 'moderator', 'university_admin'],
