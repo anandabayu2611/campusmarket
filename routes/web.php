@@ -36,5 +36,6 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/students/{id}', [ProfileController::class, 'showPublic'])->name('students.show');
 
-    Route::resource('products', ProductController::class);
+    Route::resource('products', ProductController::class)
+    ->only(['index', 'create', 'store', 'show']);
 });
