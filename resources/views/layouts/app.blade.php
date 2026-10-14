@@ -43,11 +43,17 @@
 <header class="nav">
     <a class="brand" href="{{ url('/') }}">🎓 CampusMarket</a>
     @auth
-        <nav>
-            <a href="{{ route('profile.show') }}">Profil</a>
-            <form method="POST" action="{{ route('logout') }}">@csrf<button class="link" type="submit">Keluar</button></form>
-        </nav>
-    @endauth
+    <nav>
+        <a href="{{ route('products.index') }}">Katalog</a>
+        <a href="{{ route('products.create') }}">Jual Produk</a>
+        <a href="{{ route('profile.show') }}">Profil</a>
+
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button class="link" type="submit">Keluar</button>
+        </form>
+    </nav>
+@endauth
 </header>
 <main class="container">
     @if (session('status'))<div class="alert ok">{{ session('status') }}</div>@endif
