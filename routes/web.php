@@ -25,6 +25,13 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'store'])->name('login.store');
 });
 
+/* Menjual produk: hanya mahasiswa terverifikasi (SRS-001, SRS-008).
+   Didaftarkan lebih dulu agar /products/create tidak tertangkap route show. */
+Route::middleware(['auth', 'student.verified'])->group(function () {
+    Route::resource('products', ProductController::class)
+        ->only(['create', 'store', 'edit', 'update', 'destroy']);
+});
+
 /* ---------- Pengguna login: logout, profil, produk ---------- */
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
@@ -36,6 +43,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/students/{id}', [ProfileController::class, 'showPublic'])->name('students.show');
 
+});
+
+Route::middleware('auth')->group(function () {
     Route::resource('products', ProductController::class)
-    ->only(['index', 'create', 'store', 'show']);
+        ->only(['index', 'show']);
 });

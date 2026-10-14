@@ -3,50 +3,36 @@
 namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Kreait\Laravel\Firebase\Facades\Firebase;
 
+/**
+ * Foto produk disimpan di disk lokal "public" (storage/app/public/products/<id>/...),
+ * tanpa Firebase Storage. Agar file bisa diakses dari browser, jalankan sekali:
+ *     php artisan storage:link
+ *
+ * Di Firestore hanya disimpan path & URL relatif ("/storage/..."), sehingga
+ * tetap valid walaupun APP_URL / domain berubah.
+ */
 class ProductImageStorage
 {
+    private const DISK = 'public';
+
+    /** @return array{url:string, path:string} */
     public function store(string $productId, UploadedFile $file): array
     {
-        $bucket = Firebase::storage()->getBucket();
-
-        $path = sprintf(
-            'products/%s/%s.%s',
-            $productId,
-            Str::uuid(),
-            $file->extension()
+        $path = $file->storeAs(
+            'products/' . $productId,
+            Str::uuid() . '.' . $file->extension(),
+            self::DISK
         );
 
-        $token = (string) Str::uuid();
-        $stream = fopen($file->getRealPath(), 'r');
-
-        try {
-            $bucket->upload($stream, [
-                'name' => $path,
-                'metadata' => [
-                    'contentType' => $file->getMimeType(),
-                    'metadata' => [
-                        'firebaseStorageDownloadTokens' => $token,
-                    ],
-                ],
-            ]);
-        } finally {
-            if (is_resource($stream)) {
-                fclose($stream);
-            }
+        if ($path === false) {
+            throw new \RuntimeException('Foto gagal disimpan ke disk lokal.');
         }
 
-        $url = sprintf(
-            'https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media&token=%s',
-            $bucket->name(),
-            rawurlencode($path),
-            $token
-        );
-
         return [
-            'url' => $url,
+            'url'  => '/storage/' . $path,
             'path' => $path,
         ];
     }
@@ -58,12 +44,9 @@ class ProductImageStorage
         }
 
         try {
-            Firebase::storage()
-                ->getBucket()
-                ->object($path)
-                ->delete();
+            Storage::disk(self::DISK)->delete($path);
         } catch (\Throwable $e) {
-            report($e);
+            report($e); // gagal hapus file lama tidak boleh menggagalkan proses utama
         }
     }
 }

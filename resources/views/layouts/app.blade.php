@@ -37,6 +37,36 @@
         .ratings{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
         .rating{background:var(--bg);border-radius:10px;padding:10px 12px;text-align:center} .rating b{font-size:1.15rem;display:block}
         .center{text-align:center} .row{display:flex;gap:10px} .row>*{flex:1}
+        /* Katalog produk */
+        .container.wide{max-width:1040px}
+        .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+        .btn.sm{width:auto;margin:0;padding:9px 16px}
+        .searchbar{display:flex;gap:8px;margin-top:14px}
+        .searchbar input{flex:1;min-width:0}
+        .searchbar .btn{margin:0;width:auto;padding:0 20px}
+        .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+        .chip{display:inline-block;padding:7px 14px;border-radius:99px;border:1px solid var(--border);background:#fff;color:var(--text);font-size:.88rem;text-decoration:none;white-space:nowrap}
+        .chip:hover{border-color:var(--primary);color:var(--primary)}
+        .chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+        .chips-label{font-size:.8rem;color:var(--muted);margin:16px 0 0;text-transform:uppercase;letter-spacing:.04em}
+        details.filters{margin-top:14px;border:1px solid var(--border);border-radius:10px;padding:0 14px}
+        details.filters summary{cursor:pointer;padding:12px 0;font-weight:600;font-size:.92rem}
+        .filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0 14px;padding-bottom:14px}
+        .filter-actions{display:flex;gap:10px;padding-bottom:14px}
+        .filter-actions .btn{margin:0;flex:1}
+        .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+        .product-card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;transition:box-shadow .15s}
+        .product-card:hover{box-shadow:0 4px 14px rgba(16,24,40,.12)}
+        .product-card img,.product-card .noimg{width:100%;aspect-ratio:4/3;object-fit:cover;background:#eef2ff;display:block}
+        .product-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+        .product-body h3{margin:0;font-size:1rem;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+        .price{font-weight:700;color:var(--primary);font-size:1.05rem}
+        .tags{display:flex;flex-wrap:wrap;gap:6px}
+        .tag{padding:2px 9px;border-radius:99px;background:var(--bg);color:var(--muted);font-size:.76rem}
+        .tag.cat{background:#eef2ff;color:var(--primary)}
+        .product-body .loc{font-size:.82rem;color:var(--muted);margin-top:auto}
+        .pager{display:flex;justify-content:center;align-items:center;gap:14px;margin:8px 0 24px}
+        .pager .btn{margin:0;width:auto;padding:9px 16px}
     </style>
 </head>
 <body>
@@ -55,7 +85,7 @@
     </nav>
 @endauth
 </header>
-<main class="container">
+<main class="container @yield('container_class')">
     @if (session('status'))<div class="alert ok">{{ session('status') }}</div>@endif
     @if (session('warning'))<div class="alert warn">{{ session('warning') }}</div>@endif
     @yield('content')

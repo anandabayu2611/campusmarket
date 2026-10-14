@@ -33,9 +33,60 @@
         <dt>Transaksi</dt>
         <dd>{{ $product['transaction_type'] }}</dd>
 
+        @if (!empty($product['semester']))
+            <dt>Semester</dt>
+            <dd>{{ $product['semester'] }}</dd>
+        @endif
+
         <dt>Penjual</dt>
-        <dd>{{ $product['seller_name'] }}</dd>
+        <dd>
+            @if ($seller)
+                <a href="{{ route('students.show', $seller['id']) }}">{{ $product['seller_name'] }}</a>
+            @else
+                {{ $product['seller_name'] }}
+            @endif
+        </dd>
+
+        @php($uniName = $product['university_name'] ?? null)
+        @if ($uniName)
+            <dt>Universitas penjual</dt>
+            <dd>{{ $uniName }}</dd>
+        @endif
+
+        @if (!empty($seller['campus_location']))
+            <dt>Lokasi kampus penjual</dt>
+            <dd>{{ $seller['campus_location'] }}</dd>
+        @endif
+
+        <dt>Kontak</dt>
+        <dd>
+            @if (!empty($seller['phone_number']))
+                <a href="https://wa.me/{{ ltrim($seller['phone_number'], '+') }}" target="_blank" rel="noopener">
+                    {{ $seller['phone_number'] }} (WhatsApp)
+                </a>
+            @else
+                <span class="muted">Penjual belum mencantumkan nomor HP.</span>
+            @endif
+        </dd>
     </dl>
+
+    @if (($product['seller_id'] ?? null) === (string) auth()->user()->getAuthIdentifier())
+        <a class="btn" href="{{ route('products.edit', $product['id']) }}">
+            Ubah Produk
+        </a>
+
+        <form
+            method="POST"
+            action="{{ route('products.destroy', $product['id']) }}"
+            onsubmit="return confirm('Hapus produk ini? Tindakan tidak dapat dibatalkan.')"
+        >
+            @csrf
+            @method('DELETE')
+            <button class="btn" type="submit" style="background:var(--danger)">
+                Hapus Produk
+            </button>
+        </form>
+    @endif
 
     <a class="btn secondary" href="{{ route('products.index') }}">
         Kembali ke Katalog

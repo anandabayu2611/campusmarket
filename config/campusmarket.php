@@ -31,5 +31,19 @@ return [
         'allow_login_while_pending'    => true,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Kategori produk (SRS-005, SRS-009)
+    |--------------------------------------------------------------------------
+    | 'special' = kategori khusus mahasiswa menurut SRS-009.
+    */
+    'categories' => [
+        'special' => ['Buku per Semester', 'Perlengkapan Lab', 'Gadget Second', 'Jasa Mahasiswa'],
+        'general' => ['Buku Teks dan Referensi', 'Laptop dan Gadget', 'Alat Tulis', 'Pakaian dan Aksesoris', 'Makanan dan Minuman'],
+    ],
+    'semester_category' => 'Buku per Semester',
+    'products_per_page' => 12,
+    'max_photo_kb'      => 10240, // NFRS-009: 10 MB
+
     'roles' => ['student', 'admin', 'moderator', 'university_admin'],
 ];

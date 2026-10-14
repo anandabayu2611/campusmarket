@@ -93,15 +93,49 @@
             @endforeach
         </select>
 
-        <label for="photo">Foto produk</label>
+        <div id="semester-wrap" style="display:none">
+            <label for="semester">Semester</label>
+            <select id="semester" name="semester">
+                <option value="">Pilih semester</option>
+                @foreach (range(1, 8) as $sem)
+                    <option value="{{ $sem }}" @selected((string) old('semester') === (string) $sem)>Semester {{ $sem }}</option>
+                @endforeach
+            </select>
+        </div>
+        <script>
+            (function () {
+                var cat = document.getElementById('category');
+                var wrap = document.getElementById('semester-wrap');
+                function sync() { wrap.style.display = cat.value === @json(config('campusmarket.semester_category')) ? 'block' : 'none'; }
+                cat.addEventListener('change', sync); sync();
+            })();
+        </script>
+
+        <label for="photo">Foto produk (opsional)</label>
+        <img
+            id="photo-preview"
+            alt="Pratinjau foto"
+            style="display:none;width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-bottom:8px"
+        >
         <input
             id="photo"
             type="file"
             name="photo"
             accept=".jpg,.jpeg,.png,.webp"
-            required
         >
-        <p class="hint">JPG, JPEG, PNG, atau WEBP. Maksimal 4 MB.</p>
+        <p class="hint">JPG, JPEG, PNG, atau WEBP. Maksimal 10 MB. Boleh dikosongkan.</p>
+        <script>
+            (function () {
+                var input = document.getElementById('photo');
+                var preview = document.getElementById('photo-preview');
+                input.addEventListener('change', function () {
+                    var file = input.files && input.files[0];
+                    if (!file) { preview.style.display = 'none'; return; }
+                    preview.src = URL.createObjectURL(file);
+                    preview.style.display = 'block';
+                });
+            })();
+        </script>
 
         <button class="btn" type="submit">Simpan Produk</button>
 
